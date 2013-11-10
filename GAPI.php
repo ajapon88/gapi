@@ -48,7 +48,7 @@ class GAPI
         // GoogleAPIClientの設定
         switch ($auth_type) {
             case 'ClientLogin':
-                // ClientLogin(TglLib)
+                // ClientLogin
                 $apiConfig['authClass'] = 'GapiGoogle_ClientLogin';
                 $apiConfig['oauth2_access_type'] = 'analytics';
                 break;
@@ -442,7 +442,7 @@ class GAPI
             }
             switch($fetch_type) {
                 case self::FETCH_OBJECT:
-                    return new TglGAPIResult($result);
+                    return new GAPIResult($result);
                     break;
                 case self::FETCH_ARRAY:
                     return $result;
