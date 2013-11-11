@@ -4,8 +4,12 @@
  * googleアカウントを使用して認証を行う
  * clientIdおよびclientSeacretをgoogleアカウント情報として使用する
  * 使用するサービスタイプ（oauth2_access_type）を記述する必要がある
- * @version 0.6.0
+ * @version 0.6.2
  */
+
+class GapiGoogle_AuthException extends Google_AuthException
+{
+}
 
 class GapiGoogle_ClientLogin extends Google_Auth {
 
@@ -18,13 +22,17 @@ class GapiGoogle_ClientLogin extends Google_Auth {
     public $developerKey = null;
 
     public function __construct() {
-        global $apiConfig;
-        $this->clientId = @$apiConfig['oauth2_client_id'];
-        $this->clientSecret = @$apiConfig['oauth2_client_secret'];
-        $this->accessType = @$apiConfig['oauth2_access_type'];
-        $this->developerKey = @$apiConfig['developer_key'];
+        $this->clientId = $this->getApiConfig('oauth2_client_id');
+        $this->clientSecret = $this->getApiConfig('oauth2_client_secret');
+        $this->accessType = $this->getApiConfig('oauth2_access_type');
+        $this->developerKey = $this->getApiConfig('developer_key');
     }
-
+    
+    function getApiConfig($key, $default = '') {
+        global $apiConfig;
+        return isset($apiConfig[$key]) ? $apiConfig[$key] : $default;
+    }
+    
     public function setDeveloperKey($key) {/* noop*/}
     public function setAccessToken($accessToken) {/* noop*/}
     public function getAccessToken() {return $this->accessToken;}
@@ -78,7 +86,7 @@ class GapiGoogle_ClientLogin extends Google_Auth {
             if ($decodedResponse != null && $decodedResponse['error']) {
                 $response = $decodedResponse['error'];
             }
-            throw new Google_AuthException("Error fetching ClientLogin access token, message: '$response'", $request->getResponseHttpCode());
+            throw new GapiGoogle_AuthException("Error fetching ClientLogin access token, message: '{$response}'", $request->getResponseHttpCode());
         }
     }
     

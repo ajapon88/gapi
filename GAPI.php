@@ -1,14 +1,17 @@
 <?php
 // GoogleClientLibrary
-defined('GOOGL_API_CLIENT_SRC_PATH')
-        || define('GOOGL_API_CLIENT_SRC_PATH', realpath(__DIR__.'/google-api-php-client/src'));
-require_once GOOGL_API_CLIENT_SRC_PATH.'/Google_Client.php';
-require_once GOOGL_API_CLIENT_SRC_PATH.'/contrib/Google_AnalyticsService.php';
+defined('GOOGLE_API_CLIENT_SRC_PATH')
+        || define('GOOGLE_API_CLIENT_SRC_PATH', realpath(__DIR__.'/google-api-php-client/src'));
+require_once GOOGLE_API_CLIENT_SRC_PATH.'/Google_Client.php';
+require_once GOOGLE_API_CLIENT_SRC_PATH.'/contrib/Google_AnalyticsService.php';
 // ClientLogin用Authクラス
 require_once __DIR__.'/GapiGoogle_ClientLogin.php';
 // データオブジェクトクラス
 require_once __DIR__.'/GAPIResult.php';
 
+class Gapi_Exception extends Exception
+{
+}
 
 // GAから複数回に分けてデータを取得するクラス
 class GAPI
@@ -61,7 +64,7 @@ class GAPI
                 $apiConfig['authClass'] = 'Google_OAuth2';
                 break;
             default:
-                throw new Exception(sprintf('Error: Unsupported Auth "%s".', $auth_type));
+                throw new Gapi_Exception(sprintf('Error: Unsupported Auth "%s".', $auth_type));
         }
         
         // GoogleAPIClientを生成
@@ -128,7 +131,7 @@ class GAPI
         $this->ga_end_date = $ga_end_date;
         $this->ga_metrics = $ga_metrics;
         $this->ga_options = $ga_options;
-        $this->max_results = @$ga_options['max-results'];    // ga_optionsからmax-resultsを取得する
+        $this->max_results = isset($ga_options['max-results'])?$ga_options['max-results']:0;    // ga_optionsからmax-resultsを取得する
         if (isset($ga_options['start-index'])) {
             $this->results_index = $ga_options['start-index'] - 1;
         } else {
