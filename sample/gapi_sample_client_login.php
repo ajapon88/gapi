@@ -1,23 +1,11 @@
 <?php
-// GoogleClientLibrary
-define('GOOGL_CLIENT_PATH', realpath(dirname(__FILE__).'/../'));
-require_once GOOGL_CLIENT_PATH .'/google-api-php-client/src/Google_Client.php';
-require_once GOOGL_CLIENT_PATH . '/google-api-php-client/src/contrib/Google_AnalyticsService.php';
-// GAPI
-define('GAPI_PATH', realpath(dirname(__FILE__).'/../'));
-require_once GAPI_PATH.'/GAPI.php';
+/**************************************************
+ * GAPI CientLoginサンプル
+ **************************************************/
+require_once __DIR__.'/../GAPI.php';
 
-
-// ClientLoginでデータ取得
-$auth_type = 'ClientLogin';
-
-// GAPI初期化
-$gapi = new GAPI($auth_type);
-// ClientID（Googleアカウント）
-$gapi->setClientId('email@example.com');
-// ClientSecret（Googleアカウントパスワード）
-$gapi->setClientSecret('passwd');
-
+// ClientLoginでGAPI初期化
+$gapi = new GAPI('ClientLogin', 'account@example.com', 'passwd');
 
 ?><html>
 <head>
@@ -25,13 +13,13 @@ $gapi->setClientSecret('passwd');
 </head>
 <body>
 <?php
-$ga_profile_id = 00000000;    // プロファイルID
+$ga_profile_id = '00000000';                            // プロファイルID
 $ga_dimensions = array('pageTitle','pagePath');         // ページ名とURL取得
 $ga_metrics = array('pageviews');                       // Pageviews取得
 $ga_sort_metric = '-pageviews';                         // pageviewsで降順に並び替え
 $ga_filter = '';                                        // filter：フィルタ無し
-$ga_start_date = date('Y-m-d', strtotime('-7 day'));    // 取得開始日：7日前
-$ga_end_date = date('Y-m-d', strtotime('-1 day'));      // 取得終了日：1日前
+$ga_start_date = date('Y-m-d', strtotime('-7 days'));   // 取得開始日：7日前
+$ga_end_date = date('Y-m-d', strtotime('-0 days'));     // 取得終了日：1日前
 $ga_start_index = 1;                                    // 開始index
 $ga_max_results = 1000;                                 // 最大取得件数
 $max_session_results = 5;                               // 一度に取得する件数

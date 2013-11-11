@@ -1,36 +1,25 @@
 <?php
-// GoogleClientLibrary
-define('GOOGL_CLIENT_PATH', realpath(dirname(__FILE__).'/../'));
-require_once GOOGL_CLIENT_PATH .'/google-api-php-client/src/Google_Client.php';
-require_once GOOGL_CLIENT_PATH . '/google-api-php-client/src/contrib/Google_AnalyticsService.php';
-// GAPI
-define('GAPI_PATH', realpath(dirname(__FILE__).'/../'));
-require_once GAPI_PATH.'/GAPI.php';
+/**************************************************
+ * GAPI OAuth2.0サンプル
+ **************************************************/
+require_once __DIR__.'/../GAPI.php';
 
 session_start();
 session_regenerate_id(true);
 
-
-// OAuth2.0でデータ取得
-$auth_type = 'OAuth2';
-
-// リダイレクトURIは現在アクセス中のURIにしておく。事前に登録しておくこと！
-$redirect_uri = (isset($_SERVER['HTTPS'])?'https://':'http://') . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'];
-
-// GAPI初期化
-$gapi = new GAPI($auth_type);
-// ClientID
-$gapi->setClientId('');
-// ClientSecret
-$gapi->setClientSecret('');
+// GAPI初期化(OAuth2.0)
+$gapi = new GAPI('OAuth2', 'ClientID', 'ClientSeacret');
 // RedirectURI
+// リダイレクトURIは現在アクセス中のURIにしておく。事前に登録しておくこと！
+$redirect_uri = (filter_input(INPUT_SERVER, 'HTTPS')?'https://':'http://') . filter_input(INPUT_SERVER, 'SERVER_NAME') . filter_input(INPUT_SERVER, 'PHP_SELF');
 $gapi->setRedirectUri($redirect_uri);
 
 // codeチェック
-if (isset($_GET['code'])) {
+$code = filter_input(INPUT_GET, 'code');
+if ($code) {
     try {
         // 認証
-        $gapi->authenticate($_GET['code']);
+        $gapi->authenticate($code);
         if ($gapi->getAccessToken()) {
             // 取得したトークンをセッションにセット
             $_SESSION['token'] = $gapi->getAccessToken();

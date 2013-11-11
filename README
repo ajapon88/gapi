@@ -1,2 +1,3 @@
-GoogleAnalyticsデータ取得用ライブラリ
-google-api-php-clientが別途必要となります
+GoogleAnalyticsデータ取得用ライブラリ．
+google-api-php-clientが別途必要となります．
+認証方式はClientLoginとOAuth2.0が使用できます．

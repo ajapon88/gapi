@@ -1,4 +1,9 @@
 <?php
+// GoogleClientLibrary
+defined('GOOGL_API_CLIENT_SRC_PATH')
+        || define('GOOGL_API_CLIENT_SRC_PATH', realpath(__DIR__.'/google-api-php-client/src'));
+require_once GOOGL_API_CLIENT_SRC_PATH.'/Google_Client.php';
+require_once GOOGL_API_CLIENT_SRC_PATH.'/contrib/Google_AnalyticsService.php';
 // ClientLogin用Authクラス
 require_once __DIR__.'/GapiGoogle_ClientLogin.php';
 // データオブジェクトクラス
@@ -36,14 +41,13 @@ class GAPI
     　* 設定の読み込み、設定の更新、GAPIの初期化などを行う
       *
     　* @param string $auth_type : 認証の種類
-    　* @param int $max_session_results : セッション単位でのデータ取得件数
+    　* @param string $client_id : ClientID
+    　* @param string $client_seacret : ClientSeacret
     　* @return instance
     　*/
-    public function __construct($auth_type, $max_session_results = 0)
+    public function __construct($auth_type, $client_id = null, $client_seacret = null)
     {
         global $apiConfig;
-        
-        $this->max_session_results = $max_session_results;
         
         // GoogleAPIClientの設定
         switch ($auth_type) {
@@ -63,6 +67,12 @@ class GAPI
         // GoogleAPIClientを生成
         $this->client = new Google_Client();
         $this->service = new Google_AnalyticsService($this->client);
+        if ($client_id) {
+            $this->setClientId($client_id);
+        }
+        if ($client_seacret) {
+            $this->setClientSecret($client_seacret);
+        }
     }
     
     /**
