@@ -1,17 +1,17 @@
 <?php
 /**
  * GooglAPI用ClientLoginクラス
- * googleアカウントを使用して認証を行う
- * clientIdおよびclientSeacretをgoogleアカウント情報として使用する
- * 使用するサービスタイプ（oauth2_access_type）を記述する必要がある
- * @version 0.6.2
+ * Googleアカウントを使用して認証を行う
+ * ClientIdおよびClientSecretをGoogleアカウント情報として使用する
+ * 使用するサービスタイプ（）を記述する必要がある
+ * @version 0.6.2oauth2_access_type
  */
 
-class GapiGoogle_AuthException extends Google_AuthException
+class GAPI_Google_AuthException extends Google_AuthException
 {
 }
 
-class GapiGoogle_ClientLogin extends Google_Auth {
+class GAPI_Google_ClientLogin extends Google_Auth {
 
     const CLIENT_LOGIN_URI = 'https://www.google.com/accounts/ClientLogin';
 
@@ -86,7 +86,7 @@ class GapiGoogle_ClientLogin extends Google_Auth {
             if ($decodedResponse != null && $decodedResponse['error']) {
                 $response = $decodedResponse['error'];
             }
-            throw new GapiGoogle_AuthException("Error fetching ClientLogin access token, message: '{$response}'", $request->getResponseHttpCode());
+            throw new GAPI_Google_AuthException("Error fetching ClientLogin access token, message: '{$response}'", $request->getResponseHttpCode());
         }
     }
     

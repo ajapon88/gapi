@@ -5,11 +5,11 @@ defined('GOOGLE_API_CLIENT_SRC_PATH')
 require_once GOOGLE_API_CLIENT_SRC_PATH.'/Google_Client.php';
 require_once GOOGLE_API_CLIENT_SRC_PATH.'/contrib/Google_AnalyticsService.php';
 // ClientLogin用Authクラス
-require_once __DIR__.'/GapiGoogle_ClientLogin.php';
+require_once __DIR__.'/GAPI_Google_ClientLogin.php';
 // データオブジェクトクラス
-require_once __DIR__.'/GAPIResult.php';
+require_once __DIR__.'/GAPI_Result.php';
 
-class Gapi_Exception extends Exception
+class GAPI_Exception extends Exception
 {
 }
 
@@ -45,18 +45,18 @@ class GAPI
       *
     　* @param string $auth_type : 認証の種類
     　* @param string $client_id : ClientID
-    　* @param string $client_seacret : ClientSeacret
+    　* @param string $client_secret : ClientSecret
     　* @return instance
     　*/
-    public function __construct($auth_type, $client_id = null, $client_seacret = null)
+    public function __construct($auth_type, $client_id = null, $client_secret = null)
     {
         global $apiConfig;
         
         // GoogleAPIClientの設定
         switch ($auth_type) {
             case 'ClientLogin':
-                // ClientLogin
-                $apiConfig['authClass'] = 'GapiGoogle_ClientLogin';
+                // ClientLogin(GapiLib)
+                $apiConfig['authClass'] = 'GAPI_Google_ClientLogin';
                 $apiConfig['oauth2_access_type'] = 'analytics';
                 break;
             case 'OAuth2':
@@ -64,17 +64,18 @@ class GAPI
                 $apiConfig['authClass'] = 'Google_OAuth2';
                 break;
             default:
-                throw new Gapi_Exception(sprintf('Error: Unsupported Auth "%s".', $auth_type));
+                throw new GAPI_Exception(sprintf('Error: Unsupported Auth "%s".', $auth_type));
         }
         
         // GoogleAPIClientを生成
         $this->client = new Google_Client();
         $this->service = new Google_AnalyticsService($this->client);
-        if ($client_id) {
+
+        if (!is_null($client_id)) {
             $this->setClientId($client_id);
         }
-        if ($client_seacret) {
-            $this->setClientSecret($client_seacret);
+        if (!is_null($client_secret)) {
+            $this->setClientSecret($client_secret);
         }
     }
     
@@ -455,7 +456,7 @@ class GAPI
             }
             switch($fetch_type) {
                 case self::FETCH_OBJECT:
-                    return new GAPIResult($result);
+                    return new GAPI_Result($result);
                     break;
                 case self::FETCH_ARRAY:
                     return $result;

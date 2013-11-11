@@ -1,6 +1,6 @@
 <?php
 // GAからのデータを保存するためのクラス
-class GAPIResult
+class GAPI_Result
 {
     private $data = array();
     

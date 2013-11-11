@@ -2,13 +2,16 @@
 /**************************************************
  * GAPI OAuth2.0サンプル
  **************************************************/
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once __DIR__.'/../GAPI.php';
 
 session_start();
 session_regenerate_id(true);
 
 // GAPI初期化(OAuth2.0)
-$gapi = new GAPI('OAuth2', 'ClientID', 'ClientSeacret');
+$gapi = new GAPI('OAuth2', 'ClientID', 'ClientSecret');
 // RedirectURI
 // リダイレクトURIは現在アクセス中のURIにしておく。事前に登録しておくこと！
 $redirect_uri = (filter_input(INPUT_SERVER, 'HTTPS')?'https://':'http://') . filter_input(INPUT_SERVER, 'SERVER_NAME') . filter_input(INPUT_SERVER, 'PHP_SELF');
@@ -25,7 +28,7 @@ if ($code) {
             $_SESSION['token'] = $gapi->getAccessToken();
         }
     } catch(Exception $e) {
-        
+        throw $e;
     }
     // 更新で再度認証に行かないようにリダイレクト
     header('Location: ' . $redirect_uri);
@@ -72,7 +75,7 @@ if ($gapi->getAccessToken()) {
         }
         echo '</table>';
     } catch (Exception $e) {
-        echo $e->getMessage();
+        throw $e;
     }
 } else {
     // code取得用リンク表示

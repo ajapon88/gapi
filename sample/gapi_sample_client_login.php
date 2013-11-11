@@ -2,6 +2,9 @@
 /**************************************************
  * GAPI CientLoginサンプル
  **************************************************/
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once __DIR__.'/../GAPI.php';
 
 // ClientLoginでGAPI初期化
@@ -54,7 +57,7 @@ try {
     }
     echo '</table>';
 } catch (Exception $e) {
-    echo $e->getMessage();
+    throw $e;
 }
 
 ?>
