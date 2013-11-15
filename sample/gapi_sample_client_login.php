@@ -8,7 +8,7 @@ ini_set('display_errors', 1);
 require_once __DIR__.'/../GAPI.php';
 
 // ClientLoginでGAPI初期化
-$gapi = new GAPI('ClientLogin', 'account@example.com', 'passwd');
+$gapi = new GAPI(GAPI::AUTHTYPE_CLIENTLOGIN, 'account@example.com', 'passwd');
 
 ?><html>
 <head>
@@ -16,6 +16,7 @@ $gapi = new GAPI('ClientLogin', 'account@example.com', 'passwd');
 </head>
 <body>
 <?php
+// GA設定
 $ga_profile_id = '00000000';                            // プロファイルID
 $ga_dimensions = array('pageTitle','pagePath');         // ページ名とURL取得
 $ga_metrics = array('pageviews');                       // Pageviews取得
@@ -35,31 +36,31 @@ try {
     // 1件ごとにデータ取得して表示
     while($result = $gapi->fetchResult(GAPI::FETCH_OBJECT)) {
         echo '<tr>',
-            '<td>', htmlspecialchars($gapi->getSessionIndex(), ENT_QUOTES), '</td>',
-            '<td>', htmlspecialchars($gapi->getResultIndex(), ENT_QUOTES), '</td>',
-            '<td>', htmlspecialchars($result->getId(), ENT_QUOTES), '</td>',
-            '<td>', htmlspecialchars($result->getName(), ENT_QUOTES), '</td>',
-            '<td>', htmlspecialchars($result->getWebPropertyId(), ENT_QUOTES), '</td>',
-            '</tr>', PHP_EOL;
+             '<td>', htmlspecialchars($gapi->getSessionIndex(), ENT_QUOTES), '</td>',
+             '<td>', htmlspecialchars($gapi->getResultIndex(), ENT_QUOTES), '</td>',
+             '<td>', htmlspecialchars($result->getId(), ENT_QUOTES), '</td>',
+             '<td>', htmlspecialchars($result->getName(), ENT_QUOTES), '</td>',
+             '<td>', htmlspecialchars($result->getWebPropertyId(), ENT_QUOTES), '</td>',
+             '</tr>', PHP_EOL;
     }
-    echo '</table>';
+    echo '</table>', PHP_EOL;
+    // GAへのリクエスト内容をgapi準拠で設定
     $gapi->requestReportData($ga_profile_id, $ga_dimensions, $ga_metrics, $ga_sort_metric, $ga_filter, $ga_start_date, $ga_end_date, $ga_start_index, $ga_max_results);
     echo '<table border="1"><tr><th>セッション番号</th><th>順位</th><th>ページタイトル</th><th>URL</th><th>PageViews</th></tr>', PHP_EOL;
     // 1件ごとにデータ取得して表示
     while($result = $gapi->fetchResult(GAPI::FETCH_OBJECT)) {
         echo '<tr>',
-            '<td>', htmlspecialchars($gapi->getSessionSequenceNumber(), ENT_QUOTES), '</td>',
-            '<td>', htmlspecialchars($gapi->getResultIndex(), ENT_QUOTES), '</td>',
-            '<td>', htmlspecialchars($result->getPageTitle(), ENT_QUOTES), '</td>',
-            '<td>', htmlspecialchars($result->getPagePath(), ENT_QUOTES), '</td>',
-            '<td>', htmlspecialchars($result->getPageviews(), ENT_QUOTES), '</td>',
-            '</tr>', PHP_EOL;
+             '<td>', htmlspecialchars($gapi->getSessionSequenceNumber(), ENT_QUOTES), '</td>',
+             '<td>', htmlspecialchars($gapi->getResultIndex(), ENT_QUOTES), '</td>',
+             '<td>', htmlspecialchars($result->getPageTitle(), ENT_QUOTES), '</td>',
+             '<td>', htmlspecialchars($result->getPagePath(), ENT_QUOTES), '</td>',
+             '<td>', htmlspecialchars($result->getPageviews(), ENT_QUOTES), '</td>',
+             '</tr>', PHP_EOL;
     }
-    echo '</table>';
+    echo '</table>', PHP_EOL;
 } catch (Exception $e) {
     throw $e;
 }
-
 ?>
 </body>
 </html>

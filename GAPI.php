@@ -16,6 +16,9 @@ class GAPI_Exception extends Exception
 // GAから複数回に分けてデータを取得するクラス
 class GAPI
 {
+    // 認証方式
+    const AUTHTYPE_OAUTH2 = 'OAuth2';
+    const AUTHTYPE_CLIENTLOGIN = 'ClientLogin';
     // データ取得形式
     const FETCH_ARRAY = 0;    // 配列
     const FETCH_OBJECT = 1;    // オブジェクト
@@ -44,8 +47,8 @@ class GAPI
     　* 設定の読み込み、設定の更新、GAPIの初期化などを行う
       *
     　* @param string $auth_type : 認証の種類
-    　* @param string $client_id : ClientID
-    　* @param string $client_secret : ClientSecret
+    　* @param string $client_id : ClientID(CientLoginの場合はアカウントのメールアドレス)
+    　* @param string $client_secret : ClientSecret(CientLoginの場合はアカウントのパスワード)
     　* @return instance
     　*/
     public function __construct($auth_type, $client_id = null, $client_secret = null)
@@ -54,12 +57,12 @@ class GAPI
         
         // GoogleAPIClientの設定
         switch ($auth_type) {
-            case 'ClientLogin':
+            case self::AUTHTYPE_CLIENTLOGIN:
                 // ClientLogin(GapiLib)
                 $apiConfig['authClass'] = 'GAPI_Google_ClientLogin';
                 $apiConfig['oauth2_access_type'] = 'analytics';
                 break;
-            case 'OAuth2':
+            case self::AUTHTYPE_OAUTH2:
                 // OAuth2.0(GoogleLib)
                 $apiConfig['authClass'] = 'Google_OAuth2';
                 break;

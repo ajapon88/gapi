@@ -11,7 +11,7 @@ session_start();
 session_regenerate_id(true);
 
 // GAPI初期化(OAuth2.0)
-$gapi = new GAPI('OAuth2', 'ClientID', 'ClientSecret');
+$gapi = new GAPI(GAPI::AUTHTYPE_OAUTH2, 'ClientID', 'ClientSecret');
 // RedirectURI
 // リダイレクトURIは現在アクセス中のURIにしておく。事前に登録しておくこと！
 $redirect_uri = (filter_input(INPUT_SERVER, 'HTTPS')?'https://':'http://') . filter_input(INPUT_SERVER, 'SERVER_NAME') . filter_input(INPUT_SERVER, 'PHP_SELF');
